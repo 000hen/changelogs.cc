@@ -1,15 +1,252 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  
+  /* Flat design color palette */
+  --color-primary-50: #f0f7ff;
+  --color-primary-100: #e0efff;
+  --color-primary-200: #b8dcff;
+  --color-primary-300: #7ac2ff;
+  --color-primary-400: #33a3ff;
+  --color-primary-500: #0084f4;
+  --color-primary-600: #0066cc;
+  --color-primary-700: #0052a3;
+  --color-primary-800: #004080;
+  --color-primary-900: #002e5c;
+  
+  --color-accent-400: #ff6b6b;
+  --color-accent-500: #ee5a5a;
+  --color-accent-600: #dc4747;
+  
+  --color-success-400: #4ade80;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+  
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  
+  --color-surface-50: #fafbfc;
+  --color-surface-100: #f4f5f7;
+  --color-surface-200: #e8eaed;
+  --color-surface-300: #d1d5db;
+  --color-surface-400: #9ca3af;
+  --color-surface-500: #6b7280;
+  --color-surface-600: #4b5563;
+  --color-surface-700: #374151;
+  --color-surface-800: #1f2937;
+  --color-surface-900: #111827;
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  @apply bg-surface-50 text-surface-900;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+/* Remove all shadows for flat design */
+* {
+  --tw-shadow: none !important;
+  --tw-shadow-colored: none !important;
+}
+
+/* Base button styles - flat design */
+.btn {
+  @apply px-5 py-2.5 font-medium rounded-lg transition-colors duration-150;
+  @apply border-2 border-transparent;
+}
+
+.btn-primary {
+  @apply bg-primary-500 text-white;
+  @apply hover:bg-primary-600;
+}
+
+.btn-secondary {
+  @apply bg-surface-200 text-surface-700;
+  @apply hover:bg-surface-300;
+}
+
+.btn-outline {
+  @apply bg-transparent text-primary-600 border-primary-500;
+  @apply hover:bg-primary-50;
+}
+
+.btn-danger {
+  @apply bg-accent-500 text-white;
+  @apply hover:bg-accent-600;
+}
+
+.btn-ghost {
+  @apply bg-transparent text-surface-600;
+  @apply hover:bg-surface-100;
+}
+
+/* Input styles - flat design */
+.input {
+  @apply w-full px-4 py-3 bg-white border-2 border-surface-200 rounded-lg;
+  @apply text-surface-900 placeholder:text-surface-400;
+  @apply focus:outline-none focus:border-primary-500;
+  @apply transition-colors duration-150;
+}
+
+.input-error {
+  @apply border-accent-500 focus:border-accent-500;
+}
+
+/* Card styles - flat design */
+.card {
+  @apply bg-white rounded-xl border-2 border-surface-200;
+}
+
+.card-hover {
+  @apply hover:border-primary-400 transition-colors duration-150;
+}
+
+/* Badge styles */
+.badge {
+  @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+}
+
+.badge-primary {
+  @apply bg-primary-100 text-primary-700;
+}
+
+.badge-success {
+  @apply bg-green-100 text-green-700;
+}
+
+.badge-warning {
+  @apply bg-amber-100 text-amber-700;
+}
+
+.badge-draft {
+  @apply bg-surface-200 text-surface-600;
+}
+
+/* Markdown content styling */
+.prose-changelog {
+  @apply text-surface-700 leading-relaxed;
+}
+
+.prose-changelog h1 {
+  @apply text-2xl font-bold text-surface-900 mt-8 mb-4;
+}
+
+.prose-changelog h2 {
+  @apply text-xl font-semibold text-surface-900 mt-6 mb-3;
+}
+
+.prose-changelog h3 {
+  @apply text-lg font-medium text-surface-900 mt-4 mb-2;
+}
+
+.prose-changelog p {
+  @apply mb-4;
+}
+
+.prose-changelog ul,
+.prose-changelog ol {
+  @apply mb-4 pl-6;
+}
+
+.prose-changelog ul {
+  @apply list-disc;
+}
+
+.prose-changelog ol {
+  @apply list-decimal;
+}
+
+.prose-changelog li {
+  @apply mb-1;
+}
+
+.prose-changelog code {
+  @apply font-mono text-sm bg-surface-100 px-1.5 py-0.5 rounded;
+}
+
+.prose-changelog pre {
+  @apply bg-surface-800 text-surface-100 p-4 rounded-lg overflow-x-auto mb-4;
+}
+
+.prose-changelog pre code {
+  @apply bg-transparent p-0;
+}
+
+.prose-changelog a {
+  @apply text-primary-600 hover:text-primary-700 underline;
+}
+
+.prose-changelog blockquote {
+  @apply border-l-4 border-primary-400 pl-4 italic text-surface-600 my-4;
+}
+
+/* Markdown editor overrides for flat design */
+.w-md-editor {
+  border: 2px solid var(--color-surface-200) !important;
+  border-radius: 0.5rem !important;
+  --md-editor-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.w-md-editor-toolbar {
+  border-bottom: 2px solid var(--color-surface-200) !important;
+  box-shadow: none !important;
+}
+
+/* Animation for page transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Staggered animation delays */
+.delay-1 { animation-delay: 0.05s; }
+.delay-2 { animation-delay: 0.1s; }
+.delay-3 { animation-delay: 0.15s; }
+.delay-4 { animation-delay: 0.2s; }
+.delay-5 { animation-delay: 0.25s; }
+
+/* Stats grid pattern background */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, var(--color-surface-200) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-surface-200) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Hide scrollbar but allow scrolling */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }

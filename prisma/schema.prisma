@@ -1,0 +1,132 @@
+// Changelogs.cc Database Schema
+generator client {
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  sub           String   @unique // OIDC subject identifier
+  email         String   @unique
+  name          String?
+  picture       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  ownedProjects Project[]      @relation("ProjectOwner")
+  collaborations Collaborator[]
+
+  @@index([email])
+  @@index([sub])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  slug        String   @unique // URL-friendly identifier
+  name        String
+  description String?
+  logoUrl     String?
+  website     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Owner relation
+  ownerId     String
+  owner       User     @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // Relations
+  changelogs    Changelog[]
+  collaborators Collaborator[]
+  pageViews     PageView[]
+
+  @@index([ownerId])
+  @@index([slug])
+}
+
+model Changelog {
+  id          String   @id @default(cuid())
+  version     String   // e.g., "1.0.0", "2.1.0"
+  title       String
+  content     String   // Markdown content
+  publishedAt DateTime?
+  isDraft     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Project relation
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  // Relations
+  pageViews   PageView[]
+
+  @@unique([projectId, version])
+  @@index([projectId])
+  @@index([publishedAt])
+}
+
+enum CollaboratorRole {
+  EDITOR   // Can edit changelogs
+  VIEWER   // Can only view (for future use)
+}
+
+model Collaborator {
+  id        String          @id @default(cuid())
+  role      CollaboratorRole @default(EDITOR)
+  createdAt DateTime        @default(now())
+
+  // User relation
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Project relation
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+  @@index([userId])
+  @@index([projectId])
+}
+
+model PageView {
+  id          String   @id @default(cuid())
+  timestamp   DateTime @default(now())
+  userAgent   String?
+  referer     String?
+  country     String?
+  ipHash      String?  // Hashed IP for unique visitor counting
+
+  // Relations (optional - can track project or specific changelog)
+  projectId   String?
+  project     Project?   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  changelogId String?
+  changelog   Changelog? @relation(fields: [changelogId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+  @@index([changelogId])
+  @@index([timestamp])
+  @@index([projectId, timestamp])
+}
+
+// Pending invitations (for users not yet registered)
+model PendingInvitation {
+  id        String          @id @default(cuid())
+  email     String
+  role      CollaboratorRole @default(EDITOR)
+  createdAt DateTime        @default(now())
+  expiresAt DateTime
+
+  // Project relation
+  projectId String
+  
+  @@unique([email, projectId])
+  @@index([email])
+  @@index([projectId])
+}
