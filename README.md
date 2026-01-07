@@ -1,5 +1,8 @@
 # Changelogs.cc
 
+> [!NOTE]
+> This is built with an AI Agent. I cannot promise the safety of this project. Use it at your own risk.
+
 A modern changelog management platform with OIDC authentication, team collaboration, and analytics.
 
 ## Features
